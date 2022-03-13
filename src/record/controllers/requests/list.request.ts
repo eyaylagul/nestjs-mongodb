@@ -1,4 +1,5 @@
-import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsDate, IsDateString, IsNotEmpty, IsNumber } from "class-validator";
+import {Transform} from "class-transformer";
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ListRequest {
@@ -7,7 +8,8 @@ export class ListRequest {
     type: Date,
   })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Transform(({value}) => new Date(value), {toClassOnly: true})
   startDate: Date;
 
   @ApiProperty({
@@ -15,7 +17,8 @@ export class ListRequest {
     type: Date,
   })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Transform(({value}) => new Date(value), {toClassOnly: true})
   endDate: Date;
 
   @ApiProperty({

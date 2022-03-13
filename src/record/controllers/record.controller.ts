@@ -12,7 +12,7 @@ export class RecordController {
   @ApiResponse({
     description: 'Creates new user object.',
     type: RecordResponse,
-    status: HttpStatus.OK
+    status: HttpStatus.CREATED
   })
   findAll(@Body() listRequest: ListRequest) {
     return this.recordService.list(listRequest);
