@@ -17,14 +17,26 @@ describe('Record Tests', () => {
     await app.init();
   });
 
+  afterEach(async () => {
+    await repository.truncate();
+  });
 
   it(`should filter records`, async () => {
+      // prepare
+      const now = new Date;
+      const fiveMinAfterFromNow = new Date(now.getTime() + 5 * 60000);
+      await repository.create({
+        key: 'sample-key',
+        value: 'sample-value',
+        counts: [1, 2, 3],
+        createdAt: now
+      })
       // given
       const payload = {
-        startDate: '2016-01-26',
-        endDate: '2018-02-02',
-        minCount: 2700,
-        maxCount: 3000
+        startDate: now.toISOString(),
+        endDate: fiveMinAfterFromNow.toISOString(),
+        minCount: 0,
+        maxCount: 10
       };
 
       // when
@@ -34,5 +46,14 @@ describe('Record Tests', () => {
 
       // then
       expect(result.status).toBe(201);
+      expect(result.body).toEqual({
+        "code": 0,
+        "message": "success",
+        "records": [{
+          key: "sample-key",
+          createdAt: now.toISOString(),
+          totalCount: 6
+        }]
+      })
     });
 });

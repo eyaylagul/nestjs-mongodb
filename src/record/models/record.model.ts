@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RecordModel {
+  constructor({ key, createdAt, totalCount }) {
+    this.key = key;
+    this.createdAt = createdAt;
+    this.totalCount = totalCount
+  }
+
   @ApiProperty()
   key: string;
 
@@ -8,5 +14,5 @@ export class RecordModel {
   createdAt: Date;
 
   @ApiProperty()
-  count: number;
+  totalCount: number;
 }

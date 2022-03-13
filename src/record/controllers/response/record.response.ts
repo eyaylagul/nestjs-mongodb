@@ -1,8 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Response } from '../../../application/models/response';
 import { RecordModel } from "../../models/record.model";
 
-export class RecordResponse extends Response<RecordResponse> {
+export enum Code {
+  success = 0,
+  error = 1
+}
+
+export class RecordResponse {
+  @ApiProperty()
+  code: Code
+
+  @ApiProperty()
+  message: string;
+
   @ApiProperty({type: [RecordModel] })
-  public records: RecordModel[];
+  records: RecordModel[];
 }

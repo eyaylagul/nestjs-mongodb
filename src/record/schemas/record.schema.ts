@@ -3,16 +3,18 @@ import { Document } from 'mongoose';
 
 export type RecordDocument = Record & Document;
 
-@Schema()
+@Schema({ collection: 'records'})
 export class Record {
   @Prop()
   key: string;
 
-  @Prop()
+  @Prop({
+    default: new Date
+  })
   createdAt: Date;
 
   @Prop()
-  count: number;
+  counts: number[];
 }
 
 export const RecordSchema = SchemaFactory.createForClass(Record);
