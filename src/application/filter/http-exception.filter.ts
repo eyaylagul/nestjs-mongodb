@@ -2,7 +2,12 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from
 import { Response } from "express";
 import { Code } from "../../record/controllers/response/record.response";
 
-@Catch()
+interface HttpExceptionInterface {
+  statusCode: number;
+  message: [];
+}
+
+@Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const context = host.switchToHttp();
@@ -12,11 +17,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
       ? exception.getStatus()
       : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    const {message} = exception.getResponse() as HttpExceptionInterface;
+
     response
       .status(status)
       .json({
         code: Code.error,
-        message: 'undefined message',
+        message,
+        error: exception.message
       });
   }
 }

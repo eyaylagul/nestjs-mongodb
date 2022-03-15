@@ -1,6 +1,7 @@
-import { IsDate, IsDateString, IsNotEmpty, IsNumber } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumber, Min } from "class-validator";
 import {Transform} from "class-transformer";
 import { ApiProperty } from '@nestjs/swagger';
+import { IsBiggerThan } from "../../../application/validators/IsBiggerThan";
 
 export class ListRequest {
   @ApiProperty({
@@ -27,13 +28,18 @@ export class ListRequest {
   })
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   minCount: number;
 
   @ApiProperty({
-    description: 'The mac count of record',
+    description: 'The max count of record',
     type: Number,
   })
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
+  @IsBiggerThan('minCount', {
+    message: 'maxCount must be larger than minCount',
+  })
   maxCount: number;
 }
