@@ -8,3 +8,18 @@ services:
       - '27017:27017'
     volumes:
       - ./data/mongo:/data/db
+    networks:
+      - demo
+  app:
+    container_name: nestjs-mongodb-app
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb://mongo
+    networks:
+      - demo
+
+networks:
+  demo:
+    driver: bridge

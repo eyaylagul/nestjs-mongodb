@@ -9,7 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
   }));
-  app.useGlobalFilters(new HttpExceptionFilter)
+  app.useGlobalFilters(new HttpExceptionFilter())
 
   const config = new DocumentBuilder()
     .setTitle('Nestjs Rest Example')
@@ -21,6 +21,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
