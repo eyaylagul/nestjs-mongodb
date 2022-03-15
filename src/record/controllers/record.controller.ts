@@ -1,11 +1,11 @@
 import { Controller, Post, Body, HttpStatus, UseInterceptors } from "@nestjs/common";
 import { RecordService } from '../services/record.service';
 import { ListRequest } from './requests/list.request';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { TransformInterceptor } from "../../application/interceptors/transform.interceptor";
 import { RecordResponse } from "./response/record.response";
 
-
+@ApiTags('Records')
 @Controller('records')
 export class RecordController {
   constructor(private readonly recordService: RecordService) {}

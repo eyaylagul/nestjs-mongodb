@@ -15,7 +15,6 @@ async function bootstrap() {
     .setTitle('Nestjs Rest Example')
     .setDescription('Nestjs mongodb example endpoints')
     .setVersion('1.0')
-    .addTag('Record')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
