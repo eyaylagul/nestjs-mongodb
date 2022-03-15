@@ -2,6 +2,7 @@ import { IsDate, IsNotEmpty, IsNumber, Min } from "class-validator";
 import {Transform} from "class-transformer";
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBiggerThan } from "../../../application/validators/IsBiggerThan";
+import { IsBeforeThan } from "../../../application/validators/IsBeforeThan";
 
 export class ListRequest {
   @ApiProperty({
@@ -11,6 +12,9 @@ export class ListRequest {
   @IsNotEmpty()
   @IsDate()
   @Transform(({value}) => new Date(value), {toClassOnly: true})
+  @IsBeforeThan('endDate', {
+    message: 'startDate must be before than endDate',
+  })
   startDate: Date;
 
   @ApiProperty({

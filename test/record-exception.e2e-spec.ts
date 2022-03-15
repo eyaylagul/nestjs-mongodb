@@ -35,6 +35,7 @@ describe('Record Exception Tests', () => {
     // then
     expect(result.status).toBe(400);
     expect(result.body.message).toEqual([
+      'startDate must be before than endDate',
       'startDate must be a Date instance',
       'startDate should not be empty'
     ]);
@@ -58,7 +59,30 @@ describe('Record Exception Tests', () => {
     // then
     expect(result.status).toBe(400);
     expect(result.body.message).toEqual([
+      'startDate must be before than endDate',
       'startDate must be a Date instance',
+    ]);
+    expect(result.body.error).toEqual('Bad Request Exception');
+  });
+
+  it(`should throw when startDate after than endDate `, async () => {
+    // given
+    const payload = {
+      startDate: '2019-02-02',
+      endDate: '2018-02-02',
+      minCount: 2700,
+      maxCount: 3000
+    };
+
+    // when
+    const result = await request(app.getHttpServer())
+      .post(`/records`)
+      .send(payload);
+
+    // then
+    expect(result.status).toBe(400);
+    expect(result.body.message).toEqual([
+      'startDate must be before than endDate',
     ]);
     expect(result.body.error).toEqual('Bad Request Exception');
   });
@@ -79,6 +103,7 @@ describe('Record Exception Tests', () => {
     // then
     expect(result.status).toBe(400);
     expect(result.body.message).toEqual([
+      'startDate must be before than endDate',
       'endDate must be a Date instance',
       'endDate should not be empty'
     ]);
@@ -102,6 +127,7 @@ describe('Record Exception Tests', () => {
     // then
     expect(result.status).toBe(400);
     expect(result.body.message).toEqual([
+      'startDate must be before than endDate',
       'endDate must be a Date instance',
     ]);
     expect(result.body.error).toEqual('Bad Request Exception');

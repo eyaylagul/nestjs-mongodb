@@ -1,9 +1,9 @@
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import { registerDecorator, ValidationArguments, ValidationOptions } from "class-validator";
 
-export function IsBiggerThan(property: string, validationOptions?: ValidationOptions) {
+export function IsBeforeThan(property: string, validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
-      name: 'isBiggerThan',
+      name: 'isBeforeThan',
       target: object.constructor,
       propertyName: propertyName,
       constraints: [property],
@@ -12,10 +12,9 @@ export function IsBiggerThan(property: string, validationOptions?: ValidationOpt
         validate(value: any, args: ValidationArguments) {
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
-          return typeof value === 'number' && typeof relatedValue === 'number' && value > relatedValue;
+          return value instanceof Date && relatedValue instanceof Date && value < relatedValue;
         },
       },
     });
   };
 }
-
