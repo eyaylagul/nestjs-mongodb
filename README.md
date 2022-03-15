@@ -2,30 +2,6 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
 ## Installation
 
 ```bash
@@ -33,41 +9,100 @@ $ npm install
 ```
 
 ## Running the app
-
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+cp .env.example .env
+docker-compose up -d
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
 $ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+# Fetch Records Server
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+A basic project that contains on Nest.js
 
-## Stay in touch
+##### The project is hosted on Google Cloud Run, to fetch records use below curl command.
+Production Url: `https://nest-mongo-jlbh5py2ja-ez.a.run.app`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+curl --location --request POST 'https://nest-mongo-jlbh5py2ja-ez.a.run.app/records' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "startDate": "2012-01-01",
+    "endDate": "2014-12-30",
+    "minCount": 10,
+    "maxCount": 100
+}'
+```
+Documentation can be found on https://nest-mongo-jlbh5py2ja-ez.a.run.app/documentation
+## Table of Contents
 
-## License
+- [API Documentation](#api-documentation)
+- [Environment Variables](#environment-variables)
+- [Features](#features)
+- [HealthCheck](#healthcheck)
+- [Validation](#validation)
+- [Error Handling](#error-handling)
 
-Nest is [MIT licensed](LICENSE).
+
+## API Documentation
+
+To view the list of available APIs and their specifications, go to `{{base_url}}/documentation` in your browser. This documentation page is automatically generated with `Swagger`
+
+## Environment Variables
+
+The environment variables can be found and modified in the `.env` file. If not found, create a .env file in the root directory of your project. Add environment-specific variables on new lines in the form of:
+
+```bash
+# Port number
+PORT=3000
+
+# URL of the Mongo DB
+MONGODB_URI=mongodb://mongo
+```
+
+
+## Features
+
+- **API documentation**: with [swagger](https://github.com/swagger-api/swagger-ui)
+- **Google Cloud Run**: using [gcloud run](https://cloud.google.com/run)
+- **Environment variables**: using [dotenv](https://github.com/motdotla/dotenv) and [cross-env](https://github.com/kentcdodds/cross-env#readme)
+- **Testing**: Integration tests using [Jest](https://jestjs.io)
+- **Validation**: request data validation using [class-validator](https://github.com/typestack/class-validator)
+- **Error handling**: centralized error handling mechanism
+
+## HealthCheck
+
+Healtcheck for cloud native environment like Kubernetes also this endpoint includes database level healthcheck. So thats mean when your application lose database connection, Kubernetes can handle this situation.
+
+### API Endpoints
+
+List of available routes:
+
+**Record routes**:\
+`POST /records` - get records based on input request
+
+
+## Validation
+
+Request data is validated using `class-validator`
+
+The validation schemas are defined in the `src/record/controller/requests` directory.
+
+
+## Error Handling
+
+The app has a centralized error handling mechanism.
+
+The error handling filter sends an error response, which has the following format:
+
+```json
+{
+  "code": 0,
+  "message": ["message"],
+  "error": "Bad Request exception"
+}
+```
